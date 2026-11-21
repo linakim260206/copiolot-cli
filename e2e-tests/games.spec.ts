@@ -22,6 +22,15 @@ test.describe('Game Listing and Navigation', () => {
       await expect(gameCards.first().getByTestId('game-title')).toBeVisible();
       await expect(gameCards.first().getByTestId('game-title')).not.toBeEmpty();
     });
+
+    await test.step('Verify game cards show a rating out of 5 or a placeholder', async () => {
+      const ratings = page.getByTestId('game-card').getByTestId('game-card-rating');
+      const texts = await ratings.allTextContents();
+      expect(texts.length).toBeGreaterThan(0);
+      for (const text of texts) {
+        expect(text.replace('★', '').trim()).toMatch(/^(\d\.\d \/ 5|No rating yet)$/);
+      }
+    });
   });
 
   test('should navigate to correct game details page when clicking on a game', async ({ page }) => {
